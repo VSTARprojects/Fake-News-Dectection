@@ -12,6 +12,4 @@ pandas
 streamlit
 wordcloud
 hyperopt
-textwrap
-tablulate
 nltk
