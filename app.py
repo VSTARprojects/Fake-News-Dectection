@@ -34,7 +34,7 @@ class InputTransformer(BaseEstimator, TransformerMixin):
         transformedX = self.vectorizer.transform(X_)
         return transformedX
 
-pickle_in = open("classifier.pkl","rb")
+pickle_in = open("classifier2.pkl","rb")
 classifier=pickle.load(pickle_in)
 
 def predict(text):
