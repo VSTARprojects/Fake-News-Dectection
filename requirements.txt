@@ -13,3 +13,4 @@ streamlit
 wordcloud
 hyperopt
 nltk
+Jinja2
