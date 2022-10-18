@@ -17,6 +17,7 @@ import pickle
 import pandas as pd
 import streamlit as st 
 import requests
+import sentence_transformers
 
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.metrics.pairwise import cosine_similarity
