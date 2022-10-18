@@ -10,7 +10,6 @@ scikit-learn
 matplotlib
 pandas
 streamlit
-wordcloud
 hyperopt
 nltk
 sklearn
