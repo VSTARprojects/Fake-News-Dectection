@@ -15,9 +15,14 @@ import numpy as np
 import pickle
 import pandas as pd
 import streamlit as st 
+import requests
+
 
 
 from sklearn.base import BaseEstimator, TransformerMixin
+from sentence_transformers import SentenceTransformer
+from sklearn.metrics.pairwise import cosine_similarity
+from collections import defaultdict
 
 class InputTransformer(BaseEstimator, TransformerMixin):
     def __init__(self, vectorizer):
@@ -34,7 +39,7 @@ class InputTransformer(BaseEstimator, TransformerMixin):
         transformedX = self.vectorizer.transform(X_)
         return transformedX
 
-pickle_in = open("classifier.pkl","rb")
+pickle_in = open("classifier_without_author_500.pkl","rb")
 classifier=pickle.load(pickle_in)
 
 def predict(text):
@@ -49,12 +54,52 @@ def main():
     result=""
     if st.button("Predict"):
         result=predict(text)
+        temp = requests.get('https://factchecktools.googleapis.com/v1alpha1/claims:search?key=AIzaSyBRuXbKLveIy-0H5LkCaoDLlm8BxFcs44Q&query=' + text)
+        temp = temp.json()
+        if len(temp) > 0:
+            claims_list = []
+            for x in temp['claims']:
+                sentences = [
+                    x['text'],
+                    text
+                ]
+                model = SentenceTransformer('bert-base-nli-mean-tokens')
+                sentence_embeddings = model.encode(sentences)
+                t = cosine_similarity(
+                    [sentence_embeddings[0]],
+                    sentence_embeddings[1:]
+                )
+                print(t)
+                if t > 0.44:
+                    label_dict = defaultdict(lambda: -1)
+                    label_dict['Half True'] = 0
+                    label_dict['Mostly True'] = 0
+                    label_dict['False'] = 1
+                    label_dict['True'] = 0
+                    label_dict['Barely True'] = 1
+                    label_dict['Pants on Fire'] = 1
+                    label_dict['Distorts the Facts'] = 1
+                    label_dict['Partly False'] = 1
+                    claims_list.append({'claimText': x['text'], 'rating': label_dict[x['claimReview'][0]['textualRating']], 'textualRating': x['claimReview'][0]['textualRating']})
+            if len(claims_list) > 0:
+                st.subheader('Based on Known Facts')
+                for claim in claims_list:
+                    result = claim['rating']
+                    if int(result) == 1:
+                        st.error('"' + claim['claimText'] + '" ' + ' - Fake')
+                    elif int(result) == 0:
+                        st.success('"' + claim['claimText'] + '" ' + ' ' + ' - Real')
+                    else:
+                        st.info(claim['claimText'] + '  - ' + claim['textualRating'])   
+        st.subheader('Based on the words used')  
         if int(result) == 1:
-            st.error('The news is Fake')
+            st.error('Our model predicts: The news could be Fake')
         else:
-            st.success('The news is Real')
+            st.success('Our model predicts: The news could be Real')
 
-    
+
+
+
     
 
 if __name__=='__main__':
