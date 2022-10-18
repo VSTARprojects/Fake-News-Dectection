@@ -11,6 +11,7 @@ Created on Wed Sept 26 02:20:31 2022
 """
 
 
+from urllib import response
 import numpy as np
 import pickle
 import pandas as pd
@@ -36,10 +37,12 @@ class InputTransformer(BaseEstimator, TransformerMixin):
         transformedX = self.vectorizer.transform(X_)
         return transformedX
 
-pickle_in = open("classifier_without_author_500.pkl","rb")
+pickle_in = open("classifier_final.pkl","rb")
 classifier=pickle.load(pickle_in)
 
-pickle_in_2 = open("sentence_transformer_model.pkl","rb")
+from urllib.request import urlopen
+pickle_in_2 = urlopen("https://github.com/2711-bharath/test-upload-large-files-to-gitHub/blob/main/sentence_transformer_model.pkl?raw=true")
+# pickle_in_2 = open("sentence_transformer_model.pkl","rb")
 sentence_transformer = pickle.load(pickle_in_2)
 
 def predict(text):
