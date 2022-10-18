@@ -1,4 +1,3 @@
-Flask
 gunicorn
 itsdangerous
 Jinja2
@@ -7,10 +6,8 @@ Werkzeug
 numpy
 scipy
 scikit-learn
-matplotlib
 pandas
 streamlit
-hyperopt
 nltk
 sklearn
 sentence-transformers
