@@ -17,10 +17,7 @@ import pandas as pd
 import streamlit as st 
 import requests
 
-
-
 from sklearn.base import BaseEstimator, TransformerMixin
-from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 from collections import defaultdict
 
@@ -42,8 +39,16 @@ class InputTransformer(BaseEstimator, TransformerMixin):
 pickle_in = open("classifier_without_author_500.pkl","rb")
 classifier=pickle.load(pickle_in)
 
+pickle_in_2 = open("sentence_transformer_model.pkl","rb")
+sentence_transformer = pickle.load(pickle_in_2)
+
 def predict(text):
     prediction=classifier.predict([text])
+    print(prediction)
+    return prediction
+
+def encode(sentences):
+    prediction=sentence_transformer.encode(sentences)
     print(prediction)
     return prediction
 
@@ -63,8 +68,7 @@ def main():
                     x['text'],
                     text
                 ]
-                model = SentenceTransformer('bert-base-nli-mean-tokens')
-                sentence_embeddings = model.encode(sentences)
+                sentence_embeddings = encode(sentences)
                 t = cosine_similarity(
                     [sentence_embeddings[0]],
                     sentence_embeddings[1:]
