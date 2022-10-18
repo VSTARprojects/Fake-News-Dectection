@@ -13,3 +13,5 @@ streamlit
 wordcloud
 hyperopt
 nltk
+sentence_transformers
+sklearn
