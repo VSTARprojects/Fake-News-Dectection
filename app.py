@@ -41,9 +41,9 @@ class InputTransformer(BaseEstimator, TransformerMixin):
 pickle_in = open("classifier_final.pkl","rb")
 classifier=pickle.load(pickle_in)
 
-from urllib.request import urlopen
-pickle_in_2 = urlopen("https://github.com/2711-bharath/test-upload-large-files-to-gitHub/blob/main/sentence_transformer_model.pkl?raw=true")
-# pickle_in_2 = open("sentence_transformer_model.pkl","rb")
+# from urllib.request import urlopen
+# pickle_in_2 = urlopen("https://github.com/2711-bharath/test-upload-large-files-to-gitHub/blob/main/sentence_transformer_model.pkl?raw=true")
+pickle_in_2 = open("sentence_transformer_model.pkl","rb")
 sentence_transformer = pickle.load(pickle_in_2)
 
 def predict(text):
